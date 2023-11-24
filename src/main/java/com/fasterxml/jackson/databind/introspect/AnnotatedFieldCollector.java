@@ -70,7 +70,14 @@ public class AnnotatedFieldCollector
         // Let's add super-class' fields first, then ours.
         fields = _findFields(new TypeResolutionContext.Basic(_typeFactory, parent.getBindings()),
                 parent, fields);
-        for (Field f : cls.getDeclaredFields()) {
+        Field[] clsDeclaredFields = cls.getDeclaredFields();
+        Arrays.sort(clsDeclaredFields, new Comparator<Field>() {
+            @Override
+            public int compare(Field field1, Field field2) {
+                return field1.getName().compareTo(field2.getName());
+            }
+        });
+        for (Field f : clsDeclaredFields) {
             // static fields not included (transients are at this point, filtered out later)
             if (!_isIncludableField(f)) {
                 continue;
